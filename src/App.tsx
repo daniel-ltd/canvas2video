@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { Stage, Layer, Text, Rect } from 'react-konva';
-import Rectangle, { Props as RectangleProps } from './RandomRect';
+import Rectangle, { Props as RectangleProps, ShapeProps } from './RandomRect';
 import RecordRTC from "recordrtc";
 import Konva from "konva";
 
 function App() {
-  const [rectangles, setRectangles] = useState<RectangleProps[]>([]);
+  const [rectangles, setRectangles] = useState<ShapeProps[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const panelRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
@@ -25,7 +25,16 @@ function App() {
       const recHeight = isSquare ? recSize : recSize * Math.random() + minSize;
       const x = Math.floor(Math.random() * (size.width - recWidth));
       const y = Math.floor(Math.random() * (size.height - recHeight));
-      newRectangles.push({ x, y, width: recWidth, height: recHeight, fill: Konva.Util.getRandomColor() });
+
+      newRectangles.push({
+        id: i.toString(),
+        x,
+        y,
+        width: recWidth,
+        height: recHeight,
+        fill: Konva.Util.getRandomColor(),
+        rotation: Math.random() < 0.3 ? Math.random() * 360 : 0
+      });
     }
     setRectangles(newRectangles);
   }, [size]);
@@ -78,13 +87,28 @@ function App() {
     };
   }, []);
 
+  const [selectedId, selectShape] = React.useState<string | null>(null);
+  const checkDeselect = (e: any) => {
+    // deselect when clicked on empty area
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      selectShape(null);
+    }
+  };
+
   return (
     <div ref={panelRef} className="canvas-stage">
       <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button>
 
-      <Stage ref={stageRef} width={size.width} height={size.height} backgroundColor="red">
+      <Stage
+        ref={stageRef}
+        width={size.width}
+        height={size.height}
+        onMouseDown={checkDeselect}
+        onTouchStart={checkDeselect}
+        backgroundColor="red">
         <Layer className="canvas-layer">
           <Rect
             x={0}
@@ -94,8 +118,20 @@ function App() {
             fill="#181818"
             listening={false}
           />
-          {rectangles.map((rectangle, index) => (
-            <Rectangle key={index} {...rectangle} />
+          {rectangles.map((rect, index) => (
+            <Rectangle
+              key={index}
+              shapeProps={rect}
+              isSelected={rect.id === selectedId}
+              onSelect={() => {
+                selectShape(rect.id);
+              }}
+              onChange={(newAttrs) => {
+                const rects = rectangles.slice();
+                // @ts-ignore
+                rects[index] = newAttrs;
+                setRectangles(rects);
+              }} />
           ))}
           <Text x={600} y={100} text="Hello, world!" fontSize={20} fill="white" />
         </Layer>
