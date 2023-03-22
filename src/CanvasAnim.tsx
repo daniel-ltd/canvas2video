@@ -2,6 +2,60 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { Layer, Stage } from "react-konva";
 import Konva from "konva";
 import './App.css';
+// @ts-ignore
+// import CCapture from "./CCapture.min.js";
+
+// if (!window.requestAnimationFrame) {
+
+//   window.requestAnimationFrame = (function () {
+
+//     // @ts-ignore
+//     return window.webkitRequestAnimationFrame ||
+//       // @ts-ignore
+//       window.mozRequestAnimationFrame ||
+//       // @ts-ignore
+//       window.oRequestAnimationFrame ||
+//       // @ts-ignore
+//       window.msRequestAnimationFrame ||
+//       // @ts-ignore
+//       function ( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+
+//         window.setTimeout(callback, 1000 / 60);
+
+//       };
+
+//   })();
+
+// }
+
+
+// @ts-ignore
+function loadScript(src) {
+  return new Promise(function (resolve, reject) {
+    const s = document.createElement('script');
+    let r = false;
+    s.type = 'text/javascript';
+    s.src = src;
+    s.async = true;
+    s.onerror = function (err) {
+      // @ts-ignore
+      reject(err, s);
+    };
+    // @ts-ignore
+    s.onload = s.onreadystatechange = function () {
+      // console.log(this.readyState); // uncomment this line to see which ready states are called.
+      // @ts-ignore
+      if (!r && (!this.readyState || this.readyState == 'complete')) {
+        r = true;
+        // @ts-ignore
+        resolve();
+      }
+    };
+    const t = document.getElementsByTagName('script')[0];
+    // @ts-ignore
+    t.parentElement.insertBefore(s, t);
+  });
+}
 
 function CanvasAnim() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -38,6 +92,10 @@ function CanvasAnim() {
       var shape = shapes[n];
       shape.rotate(angularDiff);
     }
+    // @ts-ignore
+    isRecording && recorder?.capture(canvasElement)
+    // @ts-ignore
+    recorder?.stop();
   };
 
   useLayoutEffect(() => {
@@ -82,43 +140,77 @@ function CanvasAnim() {
       layerRef.current?.add(box);
     }
 
-    var anim = new Konva.Animation(function (frame) {
-      layerRef.current && update(layerRef.current, frame);
-    }, layerRef.current);
+    // const canvasElement = stageRef.current?.container().querySelector("canvas") as HTMLCanvasElement;
+    // var anim = new Konva.Animation(function (frame) {
+    //   layerRef.current && update(layerRef.current, frame);
+    // }, layerRef.current);
 
-    anim.start();
+    // anim.start();
 
     return () => {
-      anim.stop();
+      // anim.stop();
       layerRef.current?.destroyChildren();
     }
   }, [size, stageRef.current]);
 
   useEffect(() => {
     // TODO: create recorder
-    const recorder = null;
+    // @ts-ignore
+    const recorder = new CCapture({
+      // framerate: 60,
+      // verbose: true,
+      format: 'webm',
+      // name: 'my-animation'
+    });
 
+    console.info("set record");
+    // @ts-ignore
     setRecorder(recorder);
   }, [stageRef.current]);
+
+  const requestRef = useRef();
+
+  // @ts-ignore
+  const animate = time => {
+    // do animation stuff here
+    console.info('rest');
+    // @ts-ignore
+    requestRef.current = requestAnimationFrame(animate);
+    layerRef.current && update(layerRef.current, { timeDiff: 1000 / 60 });
+  };
+
+  // start animation on mount
+  useEffect(() => {
+    // @ts-ignore
+    requestRef.current = requestAnimationFrame(animate);
+
+    // @ts-ignore
+    return () => cancelAnimationFrame(requestRef.current);
+  }, []);
 
   const startRecording = () => {
     setIsRecording(true);
     // TODO: start recording
-    // recorder?.startRecording();
+    // @ts-ignore
+    recorder?.start();
+    console.info('start recording');
+
+    // requestAnimationFrame(animate)
   };
 
   const stopRecording = () => {
     setIsRecording(false);
 
     // TODO: stop recording
-    // recorder?.stopRecording();
-    
+    // @ts-ignore
+    recorder?.stop();
+
     // TODO: export video
-    // recorder?.getStreamURL()
-    //   .then((url) => {
-    //     window.open(url);
-    //   })
-    //   .catch((err) => console.error(err));
+    // @ts-ignore
+    // recorder?.save(blob => {
+    //   const url = URL.createObjectURL(blob);
+    //   window.open(url);
+    // });
   };
 
   return (
