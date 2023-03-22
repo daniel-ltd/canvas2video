@@ -10,3 +10,8 @@
   top: 0;
   left: 0;
 }
+
+.btn-record {
+  position: absolute;
+  z-index: 999;
+}
