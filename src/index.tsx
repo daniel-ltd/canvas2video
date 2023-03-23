@@ -3,14 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import CanvasAnim from './CanvasAnim';
+import Capture from './Capture';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <CanvasAnim />
-  </React.StrictMode>
+  // <React.StrictMode>
+    <Capture />
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -66,6 +66,9 @@ function CanvasAnim() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [recorder, setRecorder] = useState(null);
 
+  // const [lastFrameTime, setLastFrameTime] = useState(0);
+  const lastFrameTime = useRef(0);
+
   useEffect(() => {
     const handleResize = () => {
       const stageContainer = panelRef.current;
@@ -83,21 +86,43 @@ function CanvasAnim() {
     };
   }, []);
 
-  const update = (layer: Konva.Layer, frame: any) => {
-    var angularSpeed = 100;
-    var angularDiff = (angularSpeed * frame.timeDiff) / 1000;
-    var shapes = layer.getChildren();
+  // const [angle, setAngle] = useState(0);
+  useEffect(() => {
+    const canvasElement = stageRef.current?.container().querySelector("canvas") as HTMLCanvasElement;
 
-    for (var n = 0; n < shapes.length; n++) {
-      var shape = shapes[n];
-      shape.rotate(angularDiff);
+    // @ts-ignore
+    const animate = (timestamp) => {
+      requestAnimationFrame(animate);
+
+      const timeDiff = timestamp - (lastFrameTime.current || 0);
+      // console.info(timeDiff);
+      // setLastFrameTime(timestamp);
+      lastFrameTime.current = timestamp;
+
+      const angularSpeed = 100;
+      // setAngle(angle => angle + angularSpeed * (timeDiff / 1000));
+      var angularDiff = (angularSpeed * timeDiff) / 1000;
+
+      var shapes = layerRef.current?.getChildren() || [];
+
+      for (var n = 0; n < shapes.length; n++) {
+        var shape = shapes[n];
+        shape.rotate(angularDiff);
+      }
+      // @ts-ignore
+      isRecording && recorder?.capture(canvasElement);
+    };
+
+    requestAnimationFrame(animate);
+
+    return () => {
+      console.info("cancel")
+      // @ts-ignore
+      cancelAnimationFrame(animate);
     }
-    // @ts-ignore
-    isRecording && recorder?.capture(canvasElement)
-    // @ts-ignore
-    recorder?.stop();
-  };
+  }, []);
 
+  // resize canvas => re-render shapes
   useLayoutEffect(() => {
     if (!stageRef.current) return;
 
@@ -153,6 +178,7 @@ function CanvasAnim() {
     }
   }, [size, stageRef.current]);
 
+  // set recorder
   useEffect(() => {
     // TODO: create recorder
     // @ts-ignore
@@ -166,26 +192,6 @@ function CanvasAnim() {
     console.info("set record");
     // @ts-ignore
     setRecorder(recorder);
-  }, [stageRef.current]);
-
-  const requestRef = useRef();
-
-  // @ts-ignore
-  const animate = time => {
-    // do animation stuff here
-    console.info('rest');
-    // @ts-ignore
-    requestRef.current = requestAnimationFrame(animate);
-    layerRef.current && update(layerRef.current, { timeDiff: 1000 / 60 });
-  };
-
-  // start animation on mount
-  useEffect(() => {
-    // @ts-ignore
-    requestRef.current = requestAnimationFrame(animate);
-
-    // @ts-ignore
-    return () => cancelAnimationFrame(requestRef.current);
   }, []);
 
   const startRecording = () => {
