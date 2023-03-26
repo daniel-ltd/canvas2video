@@ -87,7 +87,9 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>(({ onFrameRe
         shape.rotate(angularDiff);
       }
 
-      onFrameRender && onFrameRender();
+      // onFrameRender && onFrameRender();
+      // @ts-ignore
+      window.capture && window.capture();
     }, layerRef.current);
 
     anim.start();

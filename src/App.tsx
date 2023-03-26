@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import ChillCanvasAnimation from './components/ChillCanvasAnimation';
 import IntenseCanvasAnimation from './components/IntenseCanvasAnimation';
@@ -29,6 +29,11 @@ function App() {
       name: 'my_animation',
     });
 
+    // @ts-ignore
+    window.capture = () => {
+      recorder.capture(canvasRef.current!);
+    }
+
     setRecorder(recorder);
   }, [canvasRef]);
 
@@ -54,9 +59,11 @@ function App() {
     //   .catch((err) => console.error(err));
   };
 
-  const captureCanvas = () => {
-    isRecording && canvasRef.current && recorder?.capture(canvasRef.current);
-  }
+  const captureCanvas = useCallback(() => {
+    // console.info(isRecording);
+    // isRecording && console.info(canvasRef.current!);
+    // isRecording && recorder?.capture(canvasRef.current!);
+  }, [isRecording, recorder, canvasRef]);
 
   return (
     <>
