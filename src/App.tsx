@@ -9,7 +9,7 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recorder, setRecorder] = useState(null);
+  const [recorder, setRecorder] = useState<CCapture | null>(null);
 
   useEffect(() => {
     const canvasElements = stageRef.current?.container().querySelectorAll("canvas");
@@ -22,7 +22,12 @@ function App() {
     if (!canvasRef.current) return;
 
     // TODO: create recorder
-    const recorder = null;
+    const recorder = new CCapture({
+      format: 'webm',
+      framerate: 30,
+      quality: 100,
+      name: 'my_animation',
+    });
 
     setRecorder(recorder);
   }, [canvasRef]);
@@ -31,6 +36,7 @@ function App() {
     setIsRecording(true);
     // TODO: start recording
     // recorder?.startRecording();
+    recorder?.start();
   };
 
   const stopRecording = () => {
@@ -38,6 +44,7 @@ function App() {
 
     // TODO: stop recording
     // recorder?.stopRecording();
+    recorder?.save();
 
     // TODO: export video
     // recorder?.getStreamURL()
@@ -47,10 +54,14 @@ function App() {
     //   .catch((err) => console.error(err));
   };
 
+  const captureCanvas = () => {
+    isRecording && canvasRef.current && recorder?.capture(canvasRef.current);
+  }
+
   return (
     <>
       {/* <ChillCanvasAnimation ref={stageRef} /> */}
-      <IntenseCanvasAnimation ref={stageRef} />
+      <IntenseCanvasAnimation ref={stageRef} onFrameRender={captureCanvas} />
       <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button>

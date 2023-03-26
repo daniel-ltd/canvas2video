@@ -3,9 +3,10 @@ import { Layer, Stage, Rect } from "react-konva";
 import Konva from "konva";
 
 interface CanvasProps {
+  onFrameRender: any
 }
 
-const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>((props, stageRef) => {
+const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>(({ onFrameRender }, stageRef) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<Konva.Layer>(null);
 
@@ -85,6 +86,8 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>((props, stag
         const shape = shapes[n];
         shape.rotate(angularDiff);
       }
+
+      onFrameRender && onFrameRender();
     }, layerRef.current);
 
     anim.start();
