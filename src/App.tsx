@@ -1,3 +1,4 @@
+import CanvasCapture from 'canvas-capture';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
@@ -24,6 +25,11 @@ function App() {
     // TODO: create recorder
     const recorder = null;
 
+    CanvasCapture.init(
+      canvasRef.current,
+      { showRecDot: true },
+    );
+
     setRecorder(recorder);
   }, [canvasRef]);
 
@@ -31,6 +37,14 @@ function App() {
     setIsRecording(true);
     // TODO: start recording
     // recorder?.startRecording();
+    CanvasCapture.beginVideoRecord({
+      name: 'demo-webm',
+      format: CanvasCapture.WEBM,
+      quality: 1,
+      fps: 30,
+      // onExportProgress: (progress: number) => console.log(`WEBM export progress: ${progress}.`),
+      // onExportFinish: () => console.log(`Finished WEBM export.`),
+    });
   };
 
   const stopRecording = () => {
@@ -38,6 +52,7 @@ function App() {
 
     // TODO: stop recording
     // recorder?.stopRecording();
+    CanvasCapture.stopRecord();
 
     // TODO: export video
     // recorder?.getStreamURL()

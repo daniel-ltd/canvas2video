@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { Layer, Stage, Rect } from "react-konva";
 import Konva from "konva";
+import CanvasCapture from "canvas-capture";
 
 interface CanvasProps {
 }
@@ -85,6 +86,8 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>((props, stag
         const shape = shapes[n];
         shape.rotate(angularDiff);
       }
+
+      if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
     }, layerRef.current);
 
     anim.start();
