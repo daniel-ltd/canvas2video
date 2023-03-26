@@ -49,7 +49,7 @@ function App() {
 
   return (
     <>
-      {/* <ChillCanvasAnimation /> */}
+      {/* <ChillCanvasAnimation ref={stageRef} /> */}
       <IntenseCanvasAnimation ref={stageRef} />
       <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}

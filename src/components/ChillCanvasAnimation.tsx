@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Text, Rect } from 'react-konva';
 import Rectangle, { ShapeProps } from './RandomRect';
 import Konva from "konva";
 
-function ChillCanvasAnimation() {
+interface ChillCanvasAnimationProps { }
+
+const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>((props, stageRef) => {
   const [rectangles, setRectangles] = useState<ShapeProps[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const panelRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<Konva.Stage>(null);
 
   useEffect(() => {
     const minSize = 30;
@@ -99,6 +100,6 @@ function ChillCanvasAnimation() {
       </Stage>
     </div>
   );
-}
+});
 
 export default ChillCanvasAnimation;
