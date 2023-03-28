@@ -3,48 +3,53 @@ import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import ChillCanvasAnimation from './components/ChillCanvasAnimation';
 import IntenseCanvasAnimation from './components/IntenseCanvasAnimation';
+import RecordRTC from "recordrtc";
 
 function App() {
   const stageRef = useRef<Konva.Stage>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recorder, setRecorder] = useState(null);
+  const [recorder, setRecorder] = useState<RecordRTC | null>(null);
 
   useEffect(() => {
     const canvasElements = stageRef.current?.container().querySelectorAll("canvas");
-    if (canvasElements && canvasElements[1]) {
-      canvasRef.current = canvasElements[1];
+    if (canvasElements) {
+      canvasRef.current = canvasElements[1] || canvasElements[0];
     }
   }, [stageRef]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // TODO: create recorder
-    const recorder = null;
+    // https://github.com/muaz-khan/RecordRTC
+    const recorder: RecordRTC = new RecordRTC(canvasRef.current, {
+      type: 'canvas',
+      // MediaRecorder API seems unable to record mimeType: video/mp4
+      mimeType: 'video/webm',
+      disableLogs: false
+    });
 
     setRecorder(recorder);
   }, [canvasRef]);
 
   const startRecording = () => {
     setIsRecording(true);
-    // TODO: start recording
-    // recorder?.startRecording();
+
+    // reset recorder states and remove the data
+    recorder?.reset();
+    // start recording <canvas> drawings
+    recorder?.startRecording();
   };
 
   const stopRecording = () => {
     setIsRecording(false);
 
-    // TODO: stop recording
-    // recorder?.stopRecording();
-
-    // TODO: export video
-    // recorder?.getStreamURL()
-    //   .then((url) => {
-    //     window.open(url);
-    //   })
-    //   .catch((err) => console.error(err));
+    recorder?.stopRecording(function () {
+      const blob = recorder.getBlob();
+      const url = URL.createObjectURL(blob);
+      window.open(url);
+    });
   };
 
   return (
