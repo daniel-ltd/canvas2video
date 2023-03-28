@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Rect, Transformer } from "react-konva";
 import Konva from "konva";
+import CanvasCapture from "canvas-capture";
 
 export interface ShapeProps {
   x: number;
@@ -54,6 +55,8 @@ const RandomRect: React.FC<Props> = ({ shapeProps, isSelected, onSelect, onChang
     const anim = new Konva.Animation((frame: any) => {
       const newY = amplitude * Math.sin((frame.time * 2 * Math.PI) / period) + rect?.getAttr("y");
       rect?.y(newY);
+
+      if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
     }, rect?.getLayer());
 
     setAnimation(anim);

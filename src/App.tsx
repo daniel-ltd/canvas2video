@@ -14,8 +14,8 @@ function App() {
 
   useEffect(() => {
     const canvasElements = stageRef.current?.container().querySelectorAll("canvas");
-    if (canvasElements && canvasElements[1]) {
-      canvasRef.current = canvasElements[1];
+    if (canvasElements) {
+      canvasRef.current = canvasElements[1] || canvasElements[0];
     }
   }, [stageRef]);
 
@@ -64,8 +64,8 @@ function App() {
 
   return (
     <>
-      {/* <ChillCanvasAnimation ref={stageRef} /> */}
-      <IntenseCanvasAnimation ref={stageRef} />
+      <ChillCanvasAnimation ref={stageRef} />
+      {/* <IntenseCanvasAnimation ref={stageRef} /> */}
       <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button>
