@@ -9,6 +9,11 @@
   position: absolute;
   top: 0;
   left: 0;
+  text-align: center;
+}
+
+.canvas-stage .konvajs-content {
+  display: inline-block;
 }
 
 .btn-record {
