@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Text, Rect } from 'react-konva';
 import Rectangle, { ShapeProps } from './RandomRect';
 import Konva from "konva";
 
-function ChillCanvasAnimation() {
+interface ChillCanvasAnimationProps { }
+
+const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>((props, stageRef) => {
   const [rectangles, setRectangles] = useState<ShapeProps[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const panelRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<Konva.Stage>(null);
 
   useEffect(() => {
     const minSize = 30;
@@ -39,7 +40,7 @@ function ChillCanvasAnimation() {
     const handleResize = () => {
       const stageContainer = panelRef.current;
       if (!stageContainer) return;
-      const newWidth = stageContainer.offsetWidth;
+      const newWidth = Math.max(Math.floor(stageContainer.offsetWidth / 3), 320);
       const newHeight = stageContainer.offsetHeight;
       setSize({ width: newWidth, height: newHeight });
     };
@@ -94,11 +95,11 @@ function ChillCanvasAnimation() {
                 setRectangles(rects);
               }} />
           ))}
-          <Text x={600} y={100} text="Hello, world!" fontSize={20} fill="white" />
+          <Text x={60} y={60} text="Hello, world!" fontSize={20} fill="white" />
         </Layer>
       </Stage>
     </div>
   );
-}
+});
 
 export default ChillCanvasAnimation;
