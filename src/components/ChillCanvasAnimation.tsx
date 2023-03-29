@@ -2,13 +2,17 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Text, Rect } from 'react-konva';
 import Rectangle, { ShapeProps } from './RandomRect';
 import Konva from "konva";
+import CanvasCapture from 'canvas-capture';
 
-interface ChillCanvasAnimationProps { }
+interface ChillCanvasAnimationProps {
+  isRecording: Boolean
+}
 
-const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>((props, stageRef) => {
+const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(({ isRecording }, stageRef) => {
   const [rectangles, setRectangles] = useState<ShapeProps[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const panelRef = useRef<HTMLDivElement>(null);
+  const layerRef = useRef<Konva.Layer>(null);
 
   useEffect(() => {
     const minSize = 30;
@@ -62,6 +66,37 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
     }
   };
 
+  // useEffect(() => {
+  //   let anim: Konva.Animation;
+
+  //   if (isRecording) {
+  //     console.info(layerRef.current)
+  //     anim = new Konva.Animation((frame: any) => {
+  //       CanvasCapture.recordFrame();
+  //       console.info("capture");
+  //     }, layerRef.current);
+  //   }
+
+  //   return () => {
+  //     anim?.stop();
+  //   };
+  // }, [isRecording, layerRef]);
+
+  // useEffect(() => {
+  //   let anim: Konva.Animation;
+
+  //   anim = new Konva.Animation((frame: any) => {
+  //     if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
+  //     // console.info("capture");
+  //   }, layerRef.current);
+
+  //   anim.start();
+
+  //   return () => {
+  //     anim?.stop();
+  //   };
+  // }, [layerRef]);
+
   return (
     <div ref={panelRef} className="canvas-stage">
       <Stage
@@ -71,7 +106,10 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
         onMouseDown={checkDeselect}
         onTouchStart={checkDeselect}
         backgroundColor="red">
-        <Layer className="canvas-layer">
+        <Layer
+          ref={layerRef}
+          listening={false}
+          className="canvas-layer">
           <Rect
             x={0}
             y={0}

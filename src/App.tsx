@@ -60,11 +60,32 @@ function App() {
     //     window.open(url);
     //   })
     //   .catch((err) => console.error(err));
-  };
+  };      // CanvasCapture.recordFrame();
+
+
+  useEffect(() => {
+    let anim: Konva.Animation;
+
+    if (isRecording) {
+      console.info(isRecording)
+      anim = new Konva.Animation((frame: any) => {
+        anim.stop();
+        console.info("capture");
+        CanvasCapture.recordFrame();
+        anim.start();
+      });
+
+      anim.start();
+    }
+
+    return () => {
+      anim?.stop();
+    };
+  }, [isRecording]);
 
   return (
     <>
-      <ChillCanvasAnimation ref={stageRef} />
+      <ChillCanvasAnimation ref={stageRef} isRecording={isRecording} />
       {/* <IntenseCanvasAnimation ref={stageRef} /> */}
       <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}

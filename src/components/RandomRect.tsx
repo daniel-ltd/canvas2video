@@ -56,7 +56,7 @@ const RandomRect: React.FC<Props> = ({ shapeProps, isSelected, onSelect, onChang
       const newY = amplitude * Math.sin((frame.time * 2 * Math.PI) / period) + rect?.getAttr("y");
       rect?.y(newY);
 
-      if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
+      // if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
     }, rect?.getLayer());
 
     setAnimation(anim);
