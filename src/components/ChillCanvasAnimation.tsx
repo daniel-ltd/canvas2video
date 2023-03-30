@@ -3,6 +3,7 @@ import { Stage, Layer, Text, Rect } from 'react-konva';
 import Rectangle, { ShapeProps } from './RandomRect';
 import Konva from "konva";
 import CanvasCapture from 'canvas-capture';
+import { useFrame } from '../FrameContext';
 
 interface ChillCanvasAnimationProps {
   isRecording: Boolean
@@ -97,6 +98,18 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
   //   };
   // }, [layerRef]);
 
+  const { value, setNumFrames } = useFrame();
+  useEffect(() => {
+    // setInterval(() => {
+    //   setNumFrames(new Date());
+    // }, 16);
+    if (isRecording) {
+      console.info('capture');
+      CanvasCapture.recordFrame();
+      setNumFrames(new Date());
+    }
+  }, [value, isRecording]);
+
   return (
     <div ref={panelRef} className="canvas-stage">
       <Stage
@@ -108,7 +121,6 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
         backgroundColor="red">
         <Layer
           ref={layerRef}
-          listening={false}
           className="canvas-layer">
           <Rect
             x={0}
