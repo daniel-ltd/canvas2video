@@ -1,4 +1,5 @@
 import CanvasCapture from 'canvas-capture';
+import { Canvas2Video } from 'canvas2video';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
@@ -8,6 +9,7 @@ import RecordRTC from "recordrtc";
 import CanvasRecordRTC from './components/CanvasRecordRTC';
 import { FrameProvider, useFrame } from './FrameContext';
 import CanvasCapturer from './components/CanvasCaptuter';
+import Canvas2VideoRecorder from './components/Canvas2VideoRecorder';
 
 function App() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -23,43 +25,6 @@ function App() {
     }
   }, [stageRef]);
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
-
-    // https://github.com/muaz-khan/RecordRTC
-    const recorder: RecordRTC = new RecordRTC(canvasRef.current, {
-      type: 'canvas',
-      // MediaRecorder API seems unable to record mimeType: video/mp4
-      mimeType: 'video/webm',
-      disableLogs: false
-    });
-
-    setRecorder(recorder);
-  }, [canvasRef]);
-
-  const startRecording = () => {
-    setIsRecording(true);
-
-    // reset recorder states and remove the data
-    recorder?.reset();
-    // start recording <canvas> drawings
-    recorder?.startRecording();
-  };
-
-  const stopRecording = () => {
-    setIsRecording(false);
-
-    // TODO: stop recording
-    // recorder?.stopRecording();
-
-    // TODO: export video
-    // recorder?.getStreamURL()
-    //   .then((url) => {
-    //     window.open(url);
-    //   })
-    //   .catch((err) => console.error(err));
-  };
-
   return (
     <>
       {/* <ChillCanvasAnimation ref={stageRef} /> */}
@@ -69,6 +34,7 @@ function App() {
       </button> */}
       <CanvasRecordRTC />
       <CanvasCapturer />
+      <Canvas2VideoRecorder />
     </>
   );
 }
