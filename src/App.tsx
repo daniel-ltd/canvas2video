@@ -28,15 +28,17 @@ function App() {
 
   return (
     <>
-      {/* <ChillCanvasAnimation ref={stageRef} /> */}
-      <IntenseCanvasAnimation ref={stageRef} />
+      <ChillCanvasAnimation ref={stageRef} />
+      {/* <IntenseCanvasAnimation ref={stageRef} /> */}
       {/* <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button> */}
-      <CanvasRecordRTC />
-      <CanvasCapturer />
-      <Canvas2VideoRecorder />
-      <CCapturer />
+      <div className='btn-group'>
+        <CanvasRecordRTC />
+        <CanvasCapturer />
+        <Canvas2VideoRecorder />
+        <CCapturer />
+      </div>
     </>
   );
 }

@@ -16,7 +16,12 @@
   display: inline-block;
 }
 
-/* .btn-record {
+.btn-group {
+  display: block;
   position: absolute;
   z-index: 999;
-} */
+}
+
+.btn-group .btn-record {
+  display: block;
+}

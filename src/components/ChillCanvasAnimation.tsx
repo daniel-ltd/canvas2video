@@ -6,10 +6,9 @@ import CanvasCapture from 'canvas-capture';
 import { useFrame } from '../FrameContext';
 
 interface ChillCanvasAnimationProps {
-  isRecording: Boolean
 }
 
-const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(({ isRecording }, stageRef) => {
+const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>((props, stageRef) => {
   const [rectangles, setRectangles] = useState<ShapeProps[]>([]);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const panelRef = useRef<HTMLDivElement>(null);
@@ -98,17 +97,17 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
   //   };
   // }, [layerRef]);
 
-  const { value, setNumFrames } = useFrame();
-  useEffect(() => {
-    // setInterval(() => {
-    //   setNumFrames(new Date());
-    // }, 16);
-    if (isRecording) {
-      console.info('capture');
-      CanvasCapture.recordFrame();
-      setNumFrames(new Date());
-    }
-  }, [value, isRecording]);
+  // const { value, setNumFrames } = useFrame();
+  // useEffect(() => {
+  //   // setInterval(() => {
+  //   //   setNumFrames(new Date());
+  //   // }, 16);
+  //   if (isRecording) {
+  //     console.info('capture');
+  //     CanvasCapture.recordFrame();
+  //     setNumFrames(new Date());
+  //   }
+  // }, [value, isRecording]);
 
   return (
     <div ref={panelRef} className="canvas-stage">

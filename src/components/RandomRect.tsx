@@ -45,10 +45,10 @@ const RandomRect: React.FC<Props> = ({ shapeProps, isSelected, onSelect, onChang
     }
   };
 
-  const { value, setNumFrames } = useFrame();
-  useEffect(() => {
-    animation?.start();
-  }, [value, animation]);
+  // const { value, setNumFrames } = useFrame();
+  // useEffect(() => {
+  //   animation?.start();
+  // }, [value, animation]);
 
   useEffect((): any => {
     const rect = shapeRef.current;
