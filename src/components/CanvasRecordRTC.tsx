@@ -34,7 +34,7 @@ function CanvasRecordRTC() {
 
   return (
     <button className="btn-record" onClick={recordVideo}>
-      Export
+      RecordRTC Export
     </button>
   );
 }

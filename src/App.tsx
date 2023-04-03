@@ -11,6 +11,7 @@ import { FrameProvider, useFrame } from './FrameContext';
 import CanvasCapturer from './components/CanvasCaptuter';
 import Canvas2VideoRecorder from './components/Canvas2VideoRecorder';
 import CCapturer from './components/CCapturer';
+import DemoAnimation from './components/DemoAnimation';
 
 function App() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -28,8 +29,9 @@ function App() {
 
   return (
     <>
-      <ChillCanvasAnimation ref={stageRef} />
+      {/* <ChillCanvasAnimation ref={stageRef} /> */}
       {/* <IntenseCanvasAnimation ref={stageRef} /> */}
+      <DemoAnimation />
       {/* <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button> */}

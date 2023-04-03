@@ -1,12 +1,15 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Stage, Layer, Text, Rect } from 'react-konva';
+import { Stage, Layer, Text, Rect, Circle } from 'react-konva';
 import Rectangle, { ShapeProps } from './RandomRect';
 import Konva from "konva";
 import CanvasCapture from 'canvas-capture';
 import { useFrame } from '../FrameContext';
+import { animated, useSpring } from '@react-spring/web';
 
 interface ChillCanvasAnimationProps {
 }
+
+const AnimatedCircle = animated(Circle);
 
 const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>((props, stageRef) => {
   const [rectangles, setRectangles] = useState<ShapeProps[]>([]);
@@ -109,6 +112,18 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
   //   }
   // }, [value, isRecording]);
 
+  // @ts-ignore
+  const spring = useSpring({
+    from: { x: 10, y: 10 },
+    to: { x: 200, y: 300 }
+  });
+
+  // @ts-ignore
+  // const handleMouseMove = (e) => {
+  //   const { clientX, clientY } = e;
+  //   set({ x: clientX, y: clientY });
+  // };
+
   return (
     <div ref={panelRef} className="canvas-stage">
       <Stage
@@ -117,6 +132,7 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
         height={size.height}
         onMouseDown={checkDeselect}
         onTouchStart={checkDeselect}
+        // onMouseMove={handleMouseMove}
         backgroundColor="red">
         <Layer
           ref={layerRef}
@@ -144,6 +160,7 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
                 setRectangles(rects);
               }} />
           ))}
+          <AnimatedCircle {...spring} radius={20} fill="red" />
           <Text x={60} y={60} text="Hello, world!" fontSize={20} fill="white" />
         </Layer>
       </Stage>
