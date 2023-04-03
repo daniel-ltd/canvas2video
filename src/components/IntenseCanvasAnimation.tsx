@@ -18,8 +18,10 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>((props, stag
       if (!stageContainer) return;
 
       setSize({
-        width: Math.max(Math.floor(stageContainer.offsetWidth / 3), 320),
-        height: stageContainer.offsetHeight
+        // width: Math.max(Math.floor(stageContainer.offsetWidth / 3), 320),
+        // height: stageContainer.offsetHeight
+        width: 360,
+        height: 640
       });
     };
 
@@ -46,7 +48,7 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>((props, stag
     ];
     let colorIndex = 0;
 
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 6; i++) {
       const color = colors[colorIndex++];
       if (colorIndex >= colors.length) {
         colorIndex = 0;
