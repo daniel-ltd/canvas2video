@@ -1,7 +1,7 @@
 import CanvasCapture from 'canvas-capture';
 import { Canvas2Video } from 'canvas2video';
 import Konva from 'konva';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import ChillCanvasAnimation from './components/ChillCanvasAnimation';
 import IntenseCanvasAnimation from './components/IntenseCanvasAnimation';
@@ -10,6 +10,7 @@ import CanvasRecordRTC from './components/CanvasRecordRTC';
 import { FrameProvider, useFrame } from './FrameContext';
 import CanvasCapturer from './components/CanvasCaptuter';
 import Canvas2VideoRecorder from './components/Canvas2VideoRecorder';
+import CCapturer from './components/CCapturer';
 
 function App() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -35,6 +36,7 @@ function App() {
       <CanvasRecordRTC />
       <CanvasCapturer />
       <Canvas2VideoRecorder />
+      <CCapturer />
     </>
   );
 }
