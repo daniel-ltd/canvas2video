@@ -98,6 +98,16 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>((props, stag
     }
   }, [size, layerRef.current]);
 
+  useEffect((): any => {
+    const anim = new Konva.Animation((frame: any) => {
+      if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
+    });
+
+    anim.start();
+
+    return () => anim.stop();
+  }, []);
+
   return (
     <div ref={panelRef} className="canvas-stage">
       <Stage
