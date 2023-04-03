@@ -40,7 +40,7 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
     const handleResize = () => {
       const stageContainer = panelRef.current;
       if (!stageContainer) return;
-      const newWidth = stageContainer.offsetWidth;
+      const newWidth = Math.max(Math.floor(stageContainer.offsetWidth / 3), 320);
       const newHeight = stageContainer.offsetHeight;
       setSize({ width: newWidth, height: newHeight });
     };
@@ -95,7 +95,7 @@ const ChillCanvasAnimation = forwardRef<Konva.Stage, ChillCanvasAnimationProps>(
                 setRectangles(rects);
               }} />
           ))}
-          <Text x={600} y={100} text="Hello, world!" fontSize={20} fill="white" />
+          <Text x={60} y={60} text="Hello, world!" fontSize={20} fill="white" />
         </Layer>
       </Stage>
     </div>

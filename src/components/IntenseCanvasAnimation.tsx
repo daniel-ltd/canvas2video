@@ -19,7 +19,7 @@ const IntenseCanvasAnimation = forwardRef<Konva.Stage, CanvasProps>(({ onFrameRe
       if (!stageContainer) return;
 
       setSize({
-        width: stageContainer.offsetWidth,
+        width: Math.max(Math.floor(stageContainer.offsetWidth / 3), 320),
         height: stageContainer.offsetHeight
       });
     };
