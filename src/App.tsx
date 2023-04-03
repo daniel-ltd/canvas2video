@@ -1,3 +1,4 @@
+import CanvasCapture from 'canvas-capture';
 import Konva from 'konva';
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
@@ -5,6 +6,8 @@ import ChillCanvasAnimation from './components/ChillCanvasAnimation';
 import IntenseCanvasAnimation from './components/IntenseCanvasAnimation';
 import RecordRTC from "recordrtc";
 import CanvasRecordRTC from './components/CanvasRecordRTC';
+import { FrameProvider, useFrame } from './FrameContext';
+import CanvasCapturer from './components/CanvasCaptuter';
 
 function App() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -46,11 +49,15 @@ function App() {
   const stopRecording = () => {
     setIsRecording(false);
 
-    recorder?.stopRecording(function () {
-      const blob = recorder.getBlob();
-      const url = URL.createObjectURL(blob);
-      window.open(url);
-    });
+    // TODO: stop recording
+    // recorder?.stopRecording();
+
+    // TODO: export video
+    // recorder?.getStreamURL()
+    //   .then((url) => {
+    //     window.open(url);
+    //   })
+    //   .catch((err) => console.error(err));
   };
 
   return (
@@ -61,6 +68,7 @@ function App() {
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button> */}
       <CanvasRecordRTC />
+      <CanvasCapturer />
     </>
   );
 }

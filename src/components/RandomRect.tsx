@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Rect, Transformer } from "react-konva";
 import Konva from "konva";
+import CanvasCapture from "canvas-capture";
+import { useFrame } from "../FrameContext";
 
 export interface ShapeProps {
   x: number;
@@ -43,18 +45,26 @@ const RandomRect: React.FC<Props> = ({ shapeProps, isSelected, onSelect, onChang
     }
   };
 
+  const { value, setNumFrames } = useFrame();
+  useEffect(() => {
+    animation?.start();
+  }, [value, animation]);
+
   useEffect((): any => {
     const rect = shapeRef.current;
 
     const minPeriod = 1000;
     const maxPeriod = 4000;
     const period = Math.floor(Math.random() * (maxPeriod - minPeriod + 1)) + minPeriod;
-    const amplitude = Math.random() + 0.3;
+    const amplitude = Math.random() * 6;
 
     const anim = new Konva.Animation((frame: any) => {
       const newY = amplitude * Math.sin((frame.time * 2 * Math.PI) / period) + rect?.getAttr("y");
       rect?.y(newY);
-    }, rect?.getLayer());
+
+      // anim.stop();
+      // if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
+    });
 
     setAnimation(anim);
     anim.start();
