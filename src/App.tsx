@@ -16,9 +16,7 @@ import DemoAnimation from './components/DemoAnimation';
 function App() {
   const stageRef = useRef<Konva.Stage>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recorder, setRecorder] = useState<RecordRTC | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     const canvasElements = stageRef.current?.container().querySelectorAll("canvas");
@@ -27,19 +25,21 @@ function App() {
     }
   }, [stageRef]);
 
+  const runAnimation = () => {
+    setIsRecording(true);
+  }
+
   return (
     <>
       {/* <ChillCanvasAnimation ref={stageRef} /> */}
       {/* <IntenseCanvasAnimation ref={stageRef} /> */}
-      <DemoAnimation />
-      {/* <button className="btn-record" onClick={isRecording ? stopRecording : startRecording}>
-        {isRecording ? "Stop Recording" : "Start Recording"}
-      </button> */}
+      <DemoAnimation recording={isRecording} />
+
       <div className='btn-group'>
-        <CanvasRecordRTC />
-        <CanvasCapturer />
-        <Canvas2VideoRecorder />
-        <CCapturer />
+        <CanvasRecordRTC onBeforeRecord={runAnimation} />
+        {/* <CanvasCapturer /> */}
+        {/* <Canvas2VideoRecorder /> */}
+        {/* <CCapturer /> */}
       </div>
     </>
   );

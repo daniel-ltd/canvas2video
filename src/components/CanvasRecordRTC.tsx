@@ -1,6 +1,10 @@
-import RecordRTC from "recordrtc";
+import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
 
-function CanvasRecordRTC() {
+interface CanvasRecordRTCProps {
+  onBeforeRecord: Function
+}
+
+function CanvasRecordRTC({ onBeforeRecord }: CanvasRecordRTCProps) {
   const recordVideo = () => {
     const canvasElements = document.querySelectorAll(".canvas-stage canvas");
     if (canvasElements) {
@@ -21,12 +25,15 @@ function CanvasRecordRTC() {
       });
 
       recorder.startRecording();
+      onBeforeRecord();
 
       setTimeout(() => {
         recorder.stopRecording(function () {
           const blob = recorder.getBlob();
-          const url = URL.createObjectURL(blob);
-          window.open(url);
+          invokeSaveAsDialog(blob, 'video.webm');
+
+          // const url = URL.createObjectURL(blob);
+          // window.open(url);
         });
       }, 6000);
     }
@@ -34,7 +41,7 @@ function CanvasRecordRTC() {
 
   return (
     <button className="btn-record" onClick={recordVideo}>
-      RecordRTC Export
+      Export Video
     </button>
   );
 }
