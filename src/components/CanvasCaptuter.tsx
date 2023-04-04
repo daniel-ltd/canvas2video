@@ -2,7 +2,11 @@ import CanvasCapture from "canvas-capture";
 import Konva from "konva";
 import { useEffect } from "react";
 
-function CanvasCapturer() {
+interface Props {
+  onBeforeRecord: Function
+}
+
+function CanvasCapturer({ onBeforeRecord }: Props) {
   useEffect((): any => {
     const anim = new Konva.Animation((frame: any) => {
       if (CanvasCapture.isRecording()) CanvasCapture.recordFrame();
@@ -32,6 +36,7 @@ function CanvasCapturer() {
         // onExportProgress: (progress: number) => console.log(`WEBM export progress: ${progress}.`),
         // onExportFinish: () => console.log(`Finished WEBM export.`),
       });
+      onBeforeRecord();
 
       setTimeout(() => {
         CanvasCapture.stopRecord();

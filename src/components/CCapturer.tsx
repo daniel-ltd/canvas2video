@@ -1,6 +1,10 @@
 import Konva from "konva";
 
-function CCapturer() {
+interface Props {
+  onBeforeRecord: Function
+}
+
+function CCapturer({ onBeforeRecord }: Props) {
   const recordVideo = () => {
     const canvasElements = document.querySelectorAll(".canvas-stage canvas");
     if (canvasElements) {
@@ -20,6 +24,7 @@ function CCapturer() {
 
       recorder.start();
       anim.start();
+      onBeforeRecord();
 
       setTimeout(() => {
         recorder.save();

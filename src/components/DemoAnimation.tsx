@@ -24,7 +24,7 @@ const DemoAnimation = forwardRef<Konva.Stage, CanvasProps>(({ recording }, stage
 
   const rect1 = useSpring({
     from: { x: 60, y: 0, opacity: 0 },
-    to: { x: 60, y: 20, opacity: 1 },
+    to: { x: 60, y: 35, opacity: 1 },
     config: { duration: 1600 },
     ref: api,
     // events: () => ({
@@ -35,7 +35,7 @@ const DemoAnimation = forwardRef<Konva.Stage, CanvasProps>(({ recording }, stage
 
   const obello = useSpring({
     from: { x: 60, y: 0, opacity: 0 },
-    to: { x: 60, y: 25, opacity: 1 },
+    to: { x: 60, y: 40, opacity: 1 },
     delay: 600,
     config: { duration: 1000 },
     ref: api,
@@ -43,7 +43,7 @@ const DemoAnimation = forwardRef<Konva.Stage, CanvasProps>(({ recording }, stage
 
   const rect2 = useSpring({
     from: { x: 60, y: 190, opacity: 0 },
-    to: { x: 60, y: 90, opacity: 1 },
+    to: { x: 60, y: 105, opacity: 1 },
     delay: 1600,
     config: { duration: 2000 },
     ref: api,
@@ -51,7 +51,7 @@ const DemoAnimation = forwardRef<Konva.Stage, CanvasProps>(({ recording }, stage
 
   const rect3 = useSpring({
     from: { x: 60, y: 260, opacity: 0 },
-    to: { x: 60, y: 140, opacity: 1 },
+    to: { x: 60, y: 155, opacity: 1 },
     // pause: true,
     // immediate: true,
     delay: 1000,
@@ -61,7 +61,7 @@ const DemoAnimation = forwardRef<Konva.Stage, CanvasProps>(({ recording }, stage
 
   const rect4 = useSpring({
     from: { x: 60, y: 580, opacity: 0 },
-    to: { x: 60, y: 560, opacity: 1 },
+    to: { x: 60, y: 575, opacity: 1 },
     delay: 4600,
     config: { duration: 1320 },
     ref: api,
@@ -100,7 +100,7 @@ const DemoAnimation = forwardRef<Konva.Stage, CanvasProps>(({ recording }, stage
           <AnimatedRect
             {...rect2}
             width={240}
-            height={20}
+            height={25}
             fill="#FF6E72"
           />
 

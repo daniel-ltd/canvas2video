@@ -37,9 +37,9 @@ function App() {
 
       <div className='btn-group'>
         <CanvasRecordRTC onBeforeRecord={runAnimation} />
-        {/* <CanvasCapturer /> */}
-        {/* <Canvas2VideoRecorder /> */}
-        {/* <CCapturer /> */}
+        {/* <CanvasCapturer onBeforeRecord={runAnimation} /> */}
+        {/* <Canvas2VideoRecorder onBeforeRecord={runAnimation} /> */}
+        {/* <CCapturer onBeforeRecord={runAnimation} /> */}
       </div>
     </>
   );

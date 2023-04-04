@@ -2,7 +2,11 @@ import { Canvas2Video } from "canvas2video";
 import Konva from "konva";
 import { useEffect, useState } from "react";
 
-function Canvas2VideoRecorder() {
+interface Props {
+  onBeforeRecord: Function
+}
+
+function Canvas2VideoRecorder({ onBeforeRecord }: Props) {
   const recordVideo = () => {
     const canvasElements = document.querySelectorAll(".canvas-stage canvas");
     if (canvasElements) {
@@ -19,6 +23,7 @@ function Canvas2VideoRecorder() {
       });
 
       recorder.startRecord();
+      onBeforeRecord();
 
       setTimeout(() => {
         recorder.stopRecord();
