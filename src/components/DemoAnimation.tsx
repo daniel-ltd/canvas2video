@@ -1,8 +1,8 @@
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Layer, Stage, Rect, Text } from "react-konva";
 import Konva from "konva";
 import { animated, useSpring, useSpringRef } from "@react-spring/web";
-import { configure } from "@testing-library/react";
+import CanvasCapture from "canvas-capture";
 
 const AnimatedRect = animated(Rect);
 const AnimatedText = animated(Text);
@@ -16,12 +16,27 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
   const rect1 = useSpring({
     from: { x: 60, y: 0, opacity: 0 },
     to: { x: 60, y: 35, opacity: 1 },
-    config: { duration: 1600 },
+    config: { duration: 1000 },
     ref: api,
-    events: () => ({
-      onStart: () => console.log('the spring has started'),
-      onClick: () => console.log('the spring has resolved')
-    }),
+    // onRest: () => {
+    //   console.info("onRest");
+    // },
+    // onResolve: () => {
+    //   console.info("onResolve");
+    // },
+    // onProps: () => {
+    //   console.info("onProps");
+    // },
+    // onDestroyed: () => {
+    //   console.info("onDestroyed");
+    // },
+    // onChange: () => {
+    //   console.log("the spring has resolved");
+    //   api.pause();
+    //   setTimeout(() => {
+    //     api.resume();
+    //   }, 1000 / 60);
+    // },
     // reset: true,
   });
 
@@ -31,7 +46,7 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
     delay: 600,
     config: { duration: 1000 },
     ref: api,
-    reset: true,
+    // reset: true,
   }));
 
   const rect2 = useSpring({
@@ -63,46 +78,65 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
     // reset: true,
   });
 
+  const record = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    config: { duration: 4600 + 1320 },
+    ref: api,
+    onRest: () => {
+      console.info("stop record");
+      CanvasCapture.stopRecord();
+    },
+    onChange: () => {
+      console.log("capture frame");
+
+      api.pause();
+      CanvasCapture.recordFrame();
+      api.resume();
+
+      // setTimeout(() => {
+      //   api.resume();
+      // }, 1000 / 60);
+    },
+  });
+
   useEffect(() => {
     if (!!timestamp) {
-      // api.current.forEach(le => le.resume());
-      set({
-        from: { x: 60, y: 0, opacity: 0 },
-        to: { x: 60, y: 40, opacity: 1 },
-        delay: 600,
-        config: { duration: 1000 },
-        reset: true,
-        immediate: true
-      })
+      const canvasElements = document.querySelectorAll(".canvas-stage canvas");
+      if (canvasElements) {
+        const recordCanvas = (canvasElements[1] ||
+          canvasElements[0]) as HTMLCanvasElement;
+
+        CanvasCapture.init(recordCanvas, { showRecDot: true });
+
+        CanvasCapture.beginVideoRecord({
+          name: "demo-webm",
+          format: CanvasCapture.WEBM,
+          quality: 1,
+          fps: 150,
+        });
+      }
       api.start();
     }
   }, [timestamp, api]);
 
   const resetAnimation = () => {
     setTimestamp(Date.now());
-  }
+  };
 
   return (
     <>
-      <div className='btn-group'>
+      <div className="btn-group">
         <button className="btn-record" onClick={resetAnimation}>
           Export Video
         </button>
       </div>
 
       <div className="canvas-stage">
-        <Stage
-          ref={stageRef}
-          width={size.width}
-          height={size.height}>
+        <Stage ref={stageRef} width={size.width} height={size.height}>
           <Layer listening={false}>
             <Rect width={size.width} height={size.height} fill="white" />
-            <AnimatedRect
-              {...rect1}
-              width={240}
-              height={60}
-              fill="#FFC16E"
-            />
+            <AnimatedRect {...rect1} width={240} height={60} fill="#FFC16E" />
 
             <AnimatedText
               text="Obello"
@@ -115,12 +149,7 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
               fill="#FF6E72"
             />
 
-            <AnimatedRect
-              {...rect2}
-              width={240}
-              height={25}
-              fill="#FF6E72"
-            />
+            <AnimatedRect {...rect2} width={240} height={25} fill="#FF6E72" />
 
             <AnimatedRect
               {...rect3}
@@ -128,7 +157,12 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
               height={400}
               fillLinearGradientStartPoint={{ x: -60, y: -0 }}
               fillLinearGradientEndPoint={{ x: 0, y: 600 }}
-              fillLinearGradientColorStops={[0, 'rgb(246, 211, 101)', 1, 'rgb(253, 160, 133)']}
+              fillLinearGradientColorStops={[
+                0,
+                "rgb(246, 211, 101)",
+                1,
+                "rgb(253, 160, 133)",
+              ]}
             />
 
             <AnimatedText
