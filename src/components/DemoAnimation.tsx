@@ -1,23 +1,21 @@
-import { forwardRef, useEffect, useState } from "react";
-import { Layer, Stage, Rect, Text } from "react-konva";
 import Konva from "konva";
-import { animated, useSpring, useSpringRef } from "@react-spring/web";
-import CanvasCapture from "canvas-capture";
+import { forwardRef, useState } from "react";
+import { Layer, Stage, Rect, Text } from "react-konva";
+import { animated, useSpring } from "@react-spring/web";
+import useRecorder from "./useRecorder";
 
 const AnimatedRect = animated(Rect);
 const AnimatedText = animated(Text);
 
-const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
-  const [timestamp, setTimestamp] = useState<number>();
-
-  const api = useSpringRef();
+const DemoAnimation = forwardRef<Konva.Stage>((_props, stageRef) => {
   const [size] = useState({ width: 360, height: 640 });
+  const recorder = useRecorder(4600 + 1400 + 1000); // padding 1s
 
   const rect1 = useSpring({
     from: { x: 60, y: 0, opacity: 0 },
     to: { x: 60, y: 35, opacity: 1 },
     config: { duration: 1000 },
-    ref: api,
+    ref: recorder.api,
     // onRest: () => {
     //   console.info("onRest");
     // },
@@ -40,21 +38,21 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
     // reset: true,
   });
 
-  const [obello, set] = useSpring(() => ({
+  const obello = useSpring({
     from: { x: 60, y: 0, opacity: 0 },
     to: { x: 60, y: 40, opacity: 1 },
     delay: 600,
     config: { duration: 1000 },
-    ref: api,
+    ref: recorder.api,
     // reset: true,
-  }));
+  });
 
   const rect2 = useSpring({
     from: { x: 60, y: 190, opacity: 0 },
     to: { x: 60, y: 105, opacity: 1 },
     delay: 1600,
     config: { duration: 2000 },
-    ref: api,
+    ref: recorder.api,
     // reset: true,
   });
 
@@ -65,7 +63,7 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
     // immediate: true,
     delay: 1000,
     config: { duration: 3600 },
-    ref: api,
+    ref: recorder.api,
     // reset: true,
   });
 
@@ -73,55 +71,13 @@ const DemoAnimation = forwardRef<Konva.Stage>((props, stageRef) => {
     from: { x: 60, y: 580, opacity: 0 },
     to: { x: 60, y: 575, opacity: 1 },
     delay: 4600,
-    config: { duration: 1320 },
-    ref: api,
+    config: { duration: 1400 },
+    ref: recorder.api,
     // reset: true,
   });
 
-  const record = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-    config: { duration: 4600 + 1320 },
-    ref: api,
-    onRest: () => {
-      console.info("stop record");
-      CanvasCapture.stopRecord();
-    },
-    onChange: () => {
-      console.log("capture frame");
-
-      api.pause();
-      CanvasCapture.recordFrame();
-      api.resume();
-
-      // setTimeout(() => {
-      //   api.resume();
-      // }, 1000 / 60);
-    },
-  });
-
-  useEffect(() => {
-    if (!!timestamp) {
-      const canvasElements = document.querySelectorAll(".canvas-stage canvas");
-      if (canvasElements) {
-        const recordCanvas = (canvasElements[1] ||
-          canvasElements[0]) as HTMLCanvasElement;
-
-        CanvasCapture.init(recordCanvas, { showRecDot: true });
-
-        CanvasCapture.beginVideoRecord({
-          name: "demo-webm",
-          format: CanvasCapture.WEBM,
-          quality: 1,
-          fps: 150,
-        });
-      }
-      api.start();
-    }
-  }, [timestamp, api]);
-
   const resetAnimation = () => {
-    setTimestamp(Date.now());
+    recorder.exportVideo();
   };
 
   return (
