@@ -9,13 +9,13 @@ const AnimatedText = animated(Text);
 
 const DemoAnimation = forwardRef<Konva.Stage>((_props, stageRef) => {
   const [size] = useState({ width: 360, height: 640 });
-  const recorder = useRecorder(4600 + 1400 + 1000); // padding 1s
+  const [api, recorder] = useRecorder();
 
   const rect1 = useSpring({
     from: { x: 60, y: 0, opacity: 0 },
     to: { x: 60, y: 35, opacity: 1 },
     config: { duration: 1000 },
-    ref: recorder.api,
+    ref: api,
     // onRest: () => {
     //   console.info("onRest");
     // },
@@ -43,8 +43,11 @@ const DemoAnimation = forwardRef<Konva.Stage>((_props, stageRef) => {
     to: { x: 60, y: 40, opacity: 1 },
     delay: 600,
     config: { duration: 1000 },
-    ref: recorder.api,
+    ref: api,
     // reset: true,
+    // onChange: () => {
+    //   console.log("render");
+    // },
   });
 
   const rect2 = useSpring({
@@ -52,7 +55,7 @@ const DemoAnimation = forwardRef<Konva.Stage>((_props, stageRef) => {
     to: { x: 60, y: 105, opacity: 1 },
     delay: 1600,
     config: { duration: 2000 },
-    ref: recorder.api,
+    ref: api,
     // reset: true,
   });
 
@@ -63,7 +66,7 @@ const DemoAnimation = forwardRef<Konva.Stage>((_props, stageRef) => {
     // immediate: true,
     delay: 1000,
     config: { duration: 3600 },
-    ref: recorder.api,
+    ref: api,
     // reset: true,
   });
 
@@ -72,18 +75,29 @@ const DemoAnimation = forwardRef<Konva.Stage>((_props, stageRef) => {
     to: { x: 60, y: 575, opacity: 1 },
     delay: 4600,
     config: { duration: 1400 },
-    ref: recorder.api,
+    ref: api,
     // reset: true,
   });
 
   const resetAnimation = () => {
-    recorder.exportVideo();
+    const canvasElements = document.querySelectorAll(".canvas-stage canvas");
+    if (canvasElements) {
+      const recordCanvas = (canvasElements[1] ||
+        canvasElements[0]) as HTMLCanvasElement;
+
+      recorder.exportVideo(recordCanvas, 4600 + 1400 + 1000); // padding 1s
+      // recorder.exportVideo(recordCanvas, 3000);
+    }
   };
 
   return (
     <>
       <div className="btn-group">
-        <button className="btn-record" onClick={resetAnimation}>
+        <button
+          className="btn-record"
+          onClick={resetAnimation}
+          disabled={recorder.isRecording}
+        >
           Export Video
         </button>
       </div>
